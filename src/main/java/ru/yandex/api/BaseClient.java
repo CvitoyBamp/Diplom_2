@@ -5,7 +5,7 @@ import ru.yandex.model.Client;
 import ru.yandex.model.Token;
 
 import static io.restassured.RestAssured.given;
-import static ru.yandex.api.BaseAPI.*;
+import static ru.yandex.api.BaseApi.*;
 
 public class BaseClient {
 

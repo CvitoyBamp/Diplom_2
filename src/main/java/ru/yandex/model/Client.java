@@ -21,7 +21,8 @@ public class Client {
         this.email = email;
     }
 
-    public Client(){ }
+    public Client() {
+    }
 
     public String getEmail() {
         return email;

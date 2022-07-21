@@ -1,6 +1,7 @@
 package ru.yandex.api;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -19,24 +20,27 @@ public class ClientAuthTests {
     private Client clientWithInvalidEmail;
     private Client clientWithNullData;
 
+    @Step("Initialization of test data")
     @Before
-    public void createClient(){
-        client = new Client(RandomStringUtils.randomAlphabetic(7)+"@yandex.ru", RandomStringUtils.randomAlphanumeric(10),RandomStringUtils.randomAlphabetic(10));
+    public void createClient() {
+        client = new Client(RandomStringUtils.randomAlphabetic(7) + "@yandex.ru", RandomStringUtils.randomAlphanumeric(10), RandomStringUtils.randomAlphabetic(10));
         clientWithInvalidPassword = new Client(client.getEmail(), RandomStringUtils.randomAlphanumeric(10));
         clientWithInvalidEmail = new Client(RandomStringUtils.randomAlphanumeric(10), client.getPassword());
         clientWithNullData = new Client(null, client.getPassword());
         BaseClient.createClient(client);
     }
 
+    @Step("Deleting test data after tests")
     @After
-    public void deleteClient(){
+    public void deleteClient() {
         BaseClient.deleteClient(client);
     }
 
+    @Step("Client Authentication")
     @Test(timeout = 15000)
     @DisplayName("Auth client with exist data")
     @Description("Should return HTTP200 and client should be authorized")
-    public void shouldAuthClientWithExistData(){
+    public void shouldAuthClientWithExistData() {
         BaseClient.authClient(client)
                 .then()
                 .assertThat()
@@ -49,10 +53,11 @@ public class ClientAuthTests {
                 .body("refreshToken", notNullValue());
     }
 
+    @Step("Client Authentication")
     @Test(timeout = 15000)
     @DisplayName("Auth client with invalid password")
     @Description("Should return HTTP401 and client shouldn't be authorized")
-    public void shouldNotBeAuthorizedWithInvalidPassword(){
+    public void shouldNotBeAuthorizedWithInvalidPassword() {
         BaseClient.authClient(clientWithInvalidPassword)
                 .then()
                 .assertThat()
@@ -63,10 +68,11 @@ public class ClientAuthTests {
                 .body("message", equalTo("email or password are incorrect"));
     }
 
+    @Step("Client Authentication")
     @Test(timeout = 15000)
     @DisplayName("Auth client with invalid email")
     @Description("Should return HTTP401 and client shouldn't be authorized")
-    public void shouldNotBeAuthorizedWithInvalidEmail(){
+    public void shouldNotBeAuthorizedWithInvalidEmail() {
         BaseClient.authClient(clientWithInvalidEmail)
                 .then()
                 .assertThat()
@@ -77,10 +83,11 @@ public class ClientAuthTests {
                 .body("message", equalTo("email or password are incorrect"));
     }
 
+    @Step("Client Authentication")
     @Test(timeout = 15000)
     @DisplayName("Auth client with no data email")
     @Description("Should return HTTP401 and client shouldn't be authorized")
-    public void shouldNotBeAuthorizedWithNullEmail(){
+    public void shouldNotBeAuthorizedWithNullEmail() {
         BaseClient.authClient(clientWithNullData)
                 .then()
                 .assertThat()
@@ -90,8 +97,5 @@ public class ClientAuthTests {
                 .and()
                 .body("message", equalTo("email or password are incorrect"));
     }
-
-
-
 
 }

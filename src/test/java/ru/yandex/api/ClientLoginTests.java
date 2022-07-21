@@ -1,6 +1,7 @@
 package ru.yandex.api;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.httpclient.HttpStatus;
@@ -18,29 +19,33 @@ public class ClientLoginTests {
     private Client clientWithoutPassword;
     private Client clientWithoutName;
 
+    @Step("Initialization of test data")
     @Before
-    public void clientData(){
-        client = new Client(RandomStringUtils.randomAlphabetic(7)+"@yandex.ru", RandomStringUtils.randomAlphanumeric(10),RandomStringUtils.randomAlphabetic(10));
+    public void clientData() {
+        client = new Client(RandomStringUtils.randomAlphabetic(7) + "@yandex.ru", RandomStringUtils.randomAlphanumeric(10), RandomStringUtils.randomAlphabetic(10));
         clientWithoutEmail = new Client(null, client.getPassword(), client.getName());
         clientWithoutPassword = new Client(client.getEmail(), null, client.getName());
         clientWithoutName = new Client(client.getEmail(), client.getPassword(), null);
     }
 
+    @Step("Deleting test data after tests")
     @After
-    public void deleteClient(){
+    public void deleteClient() {
         BaseClient.deleteClient(client);
     }
+
 
     @Test
     @DisplayName("Create new client")
     @Description("Should return HTTP200 and create new client")
-    public void shouldCreateClientStatusOk(){
+    public void shouldCreateClientStatusOk() {
         BaseClient.createClient(client)
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK);
     }
 
+    @Step("Creating a client")
     @Test
     @DisplayName("Create client with same data")
     @Description("Should return HTTP403 and \"User already exists\" message")
@@ -56,6 +61,7 @@ public class ClientLoginTests {
                 .body("message", equalTo("User already exists"));
     }
 
+    @Step("Creating a client")
     @Test
     @DisplayName("Create client with no email-data")
     @Description("Should return HTTP403 and \"Email, password and name are required fields\" message")
@@ -70,6 +76,7 @@ public class ClientLoginTests {
                 .body("message", equalTo("Email, password and name are required fields"));
     }
 
+    @Step("Creating a client")
     @Test
     @DisplayName("Create client with no password")
     @Description("Should return HTTP403 and \"Email, password and name are required fields\" message")
@@ -84,6 +91,7 @@ public class ClientLoginTests {
                 .body("message", equalTo("Email, password and name are required fields"));
     }
 
+    @Step("Creating a client")
     @Test
     @DisplayName("Create client with no name")
     @Description("Should return HTTP403 and \"Email, password and name are required fields\" message")

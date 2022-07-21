@@ -1,11 +1,11 @@
 package ru.yandex.api;
 
 import io.restassured.response.Response;
-import ru.yandex.model.Client;
 import ru.yandex.model.Ingredients;
 
 import static io.restassured.RestAssured.given;
-import static ru.yandex.api.BaseAPI.*;
+import static ru.yandex.api.BaseApi.createOrderAPI;
+import static ru.yandex.api.BaseApi.getIngredientsAPI;
 
 public class BaseOrder {
 
