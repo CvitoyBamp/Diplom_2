@@ -1,0 +1,6 @@
+ru\yandex\model\Token.class
+ru\yandex\api\BaseOrder.class
+ru\yandex\api\BaseAPI.class
+ru\yandex\api\BaseClient.class
+ru\yandex\model\Client.class
+ru\yandex\model\Ingredients.class
