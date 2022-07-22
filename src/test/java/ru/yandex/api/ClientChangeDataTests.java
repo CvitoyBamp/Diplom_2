@@ -1,6 +1,7 @@
 package ru.yandex.api;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.apache.commons.httpclient.HttpStatus;
@@ -18,11 +19,11 @@ public class ClientChangeDataTests {
     private Client client;
     private Client clientWithNewName;
     private Client clientWithNewEmail;
-    private Client clientWithSameEmail;
     private static Response response;
     private String accessToken;
     private String refreshToken;
 
+    @Step("Initialization of test data")
     @Before
     public void getTokenAndAuth(){
         client = new Client(RandomStringUtils.randomAlphabetic(7)+"@yandex.ru", RandomStringUtils.randomAlphanumeric(10),RandomStringUtils.randomAlphabetic(10));
@@ -35,13 +36,15 @@ public class ClientChangeDataTests {
         BaseClient.logoutClient(new Token(refreshToken));
     }
 
+    @Step("Deleting test data after tests")
     @After
-    public void deleteClient(){
+    public void deleteClient() {
         BaseClient.deleteClient(client);
         BaseClient.deleteClient(clientWithNewName);
         BaseClient.deleteClient(clientWithNewEmail);
     }
 
+    @Step("Updating client data")
     @Test
     @DisplayName("Change client email")
     @Description("Should return HTTP200 and client's email should be changed")
@@ -56,6 +59,7 @@ public class ClientChangeDataTests {
                 .body("user.name", equalTo(clientWithNewEmail.getName()));
     }
 
+    @Step("Updating client data")
     @Test
     @DisplayName("Change client name")
     @Description("Should return HTTP200 and client's name should be changed")
@@ -70,6 +74,7 @@ public class ClientChangeDataTests {
                 .body("user.name", equalTo(clientWithNewName.getName()));
     }
 
+    @Step("Updating client data")
     @Test
     @DisplayName("Request with already exist email")
     @Description("Should return HTTP403 and client's email should be the same")
@@ -82,6 +87,7 @@ public class ClientChangeDataTests {
                 .body("success", is(true));
     }
 
+    @Step("Updating client data")
     @Test
     @DisplayName("Try change email without auth")
     @Description("Should return HTTP401 and data shouldn't changed")

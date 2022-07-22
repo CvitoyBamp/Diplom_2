@@ -1,6 +1,7 @@
 package ru.yandex.api;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.apache.commons.httpclient.HttpStatus;
@@ -25,6 +26,7 @@ public class OrderTests {
     private String accessToken;
     private String refreshToken;
 
+    @Step("Initialization of test data")
     @Before
     public void getIngredientsData(){
        ingredientsList =  BaseOrder.getIngredients().then().extract().path("data._id");
@@ -35,6 +37,7 @@ public class OrderTests {
        refreshToken = response.path("refreshToken").toString();
     }
 
+    @Step("Creating an order")
     @Test
     @DisplayName("Ingredients list correctly returned")
     @Description("Should return HTTP200 and list of ingredients")
@@ -49,6 +52,7 @@ public class OrderTests {
                 .body("data", notNullValue());
     }
 
+    @Step("Creating an order")
     @Test
     @DisplayName("Order list of the authorized user")
     @Description("Should return HTTP200 and list of client order")
@@ -61,6 +65,7 @@ public class OrderTests {
                .body("success", is(true));
     }
 
+    @Step("Creating an order")
     @Test
     @DisplayName("Order list of the unauthorized user")
     @Description("Should return HTTP401 because of unauthorized user")
@@ -75,6 +80,7 @@ public class OrderTests {
                 .body("message", equalTo("You should be authorised"));
     }
 
+    @Step("Creating an order")
     @Test
     @DisplayName("Create order of the authorized user")
     @Description("Should return HTTP200 and create order")
@@ -91,6 +97,7 @@ public class OrderTests {
                 .body("order", notNullValue());
     }
 
+    @Step("Creating an order")
     @Test
     @DisplayName("Create order of the unauthorized user")
     @Description("Should return HTTP401 because of unauthorized user")
@@ -107,6 +114,7 @@ public class OrderTests {
                 .body("order", notNullValue());
     }
 
+    @Step("Creating an order")
     @Test
     @DisplayName("Create order with invalid hash of Ingredient")
     @Description("Should return HTTP500 because of uinvalid hash of Ingredient")
@@ -117,6 +125,7 @@ public class OrderTests {
                 .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
     }
 
+    @Step("Creating an order")
     @Test
     @DisplayName("Create order with no ingredient")
     @Description("Should return HTTP400 because of null Ingredient")
